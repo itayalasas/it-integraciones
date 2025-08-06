@@ -93,18 +93,28 @@ export const systemsService = {
   // Obtener sistemas activos
   async getActiveSystems(): Promise<System[]> {
     try {
-      const q = query(
-        collection(db, COLLECTION_NAME), 
-        where('isActive', '==', true),
-        orderBy('name')
-      );
-      const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate(),
-        updatedAt: doc.data().updatedAt?.toDate()
-      } as System));
+      // Try the optimized query first
+      try {
+        const q = query(
+          collection(db, COLLECTION_NAME), 
+          where('isActive', '==', true),
+          orderBy('name')
+        );
+        const querySnapshot = await getDocs(q);
+        return querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+          createdAt: doc.data().createdAt?.toDate(),
+          updatedAt: doc.data().updatedAt?.toDate()
+        } as System));
+      } catch (indexError) {
+        // Fallback: get all systems and filter in memory
+        console.warn('Firebase index not ready, using fallback method');
+        const allSystems = await this.getSystems();
+        return allSystems
+          .filter(system => system.isActive)
+          .sort((a, b) => a.name.localeCompare(b.name));
+      }
     } catch (error) {
       console.error('Error fetching active systems:', error);
       throw error;
