@@ -609,11 +609,11 @@ export const wordTemplateService = {
 
       // Crear un blob con el contenido HTML
       const blob = new Blob([htmlContent], { 
-        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
+        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
       });
       
       // Generar nombre del archivo con fecha
-      const fileName = `Plantilla_Solicitud_Integracion_${new Date().toISOString().split('T')[0]}.doc`;
+      const fileName = `Plantilla_Solicitud_Integracion_${new Date().toISOString().split('T')[0]}.docx`;
       
       // Descargar el archivo
       saveAs(blob, fileName);
@@ -744,10 +744,10 @@ export const wordTemplateService = {
       `;
 
       const blob = new Blob([htmlContent], { 
-        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
+        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
       });
       
-      const fileName = `Plantilla_Simplificada_Integracion_${new Date().toISOString().split('T')[0]}.doc`;
+      const fileName = `Plantilla_Simplificada_Integracion_${new Date().toISOString().split('T')[0]}.docx`;
       saveAs(blob, fileName);
 
     } catch (error) {
