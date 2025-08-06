@@ -154,7 +154,9 @@ export const requestsService = {
             integrationPoints: '',
             dataFlow: '',
             securityRequirements: '',
-            performanceRequirements: ''
+            performanceRequirements: '',
+            serviceUrl: '',
+            credentials: ''
           },
           nonFunctionalRequirements: data.nonFunctionalRequirements || {
             availability: '',

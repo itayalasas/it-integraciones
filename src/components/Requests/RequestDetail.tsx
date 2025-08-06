@@ -491,6 +491,42 @@ const RequestDetail: React.FC = () => {
                   <p className="text-gray-700">{request.technicalRequirements.performanceRequirements}</p>
                 </div>
               )}
+              {request.technicalRequirements.serviceUrl && (
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-3">URL del Servicio</h3>
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+                    <a 
+                      href={request.technicalRequirements.serviceUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 underline break-all"
+                    >
+                      {request.technicalRequirements.serviceUrl}
+                    </a>
+                  </div>
+                </div>
+              )}
+              {request.technicalRequirements.credentials && (
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-3">Credenciales</h3>
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                    <div className="flex items-start space-x-3">
+                      <AlertCircle className="h-5 w-5 text-amber-600 mt-0.5" />
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-amber-800 mb-2">Información Sensible</p>
+                        <div className="bg-white border border-amber-300 rounded p-3">
+                          <pre className="text-sm text-gray-800 whitespace-pre-wrap break-all">
+                            {atob(request.technicalRequirements.credentials)}
+                          </pre>
+                        </div>
+                        <p className="text-xs text-amber-700 mt-2">
+                          Esta información está encriptada en la base de datos y solo es visible aquí.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

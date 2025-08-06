@@ -382,7 +382,9 @@ const NewRequest: React.FC = () => {
           integrationPoints: data.integrationPoints,
           dataFlow: data.dataFlow,
           securityRequirements: data.securityRequirements,
-          performanceRequirements: data.performanceRequirements
+          performanceRequirements: data.performanceRequirements,
+          serviceUrl: data.serviceUrl,
+          credentials: data.credentials ? btoa(data.credentials) : '' // Encriptar credenciales con base64
         },
         nonFunctionalRequirements: {
           availability: data.availability,
