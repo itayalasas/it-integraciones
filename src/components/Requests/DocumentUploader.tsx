@@ -266,7 +266,7 @@ const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onDataProcessed, on
                     <input
                       type="file"
                       onChange={handleFileInput}
-                      accept=".docx,.doc"
+                      accept=".docx"
                       className="hidden"
                       id="file-upload"
                     />
