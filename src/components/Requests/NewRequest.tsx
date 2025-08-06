@@ -25,10 +25,8 @@ import {
   Database,
   Cloud,
   Server,
-  Zap,
   Paperclip,
   Download,
-  Loader2
 } from 'lucide-react';
 import { TestCase, System, Document } from '../../types';
 import { documentsService } from '../../services/documentsService';
