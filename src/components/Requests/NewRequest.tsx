@@ -22,7 +22,8 @@ import {
   Code,
   Database,
   Server,
-  Settings
+  Settings,
+  TestTube
 } from 'lucide-react';
 import { TestCase, System, Document } from '../../types';
 import { documentsService } from '../../services/documentsService';
