@@ -476,6 +476,7 @@ const Settings: React.FC = () => {
               <li>• Formato compacto (1-2 páginas)</li>
               <li>• Ideal para integraciones simples</li>
               <li>• Fácil de completar</li>
+              <li>• <strong>Importante:</strong> Guardar como .docx antes de subir</li>
             </ul>
           </div>
           
