@@ -476,7 +476,6 @@ const Settings: React.FC = () => {
               <li>• Formato compacto (1-2 páginas)</li>
               <li>• Ideal para integraciones simples</li>
               <li>• Fácil de completar</li>
-              <li>• <strong>Importante:</strong> Guardar como .docx antes de subir</li>
             </ul>
           </div>
           
@@ -493,9 +492,9 @@ const Settings: React.FC = () => {
         
         <div className="mt-4 p-3 bg-gray-50 rounded-lg">
           <p className="text-sm text-gray-700">
-            <strong>💡 Uso recomendado:</strong> Los usuarios pueden descargar estas plantillas, completarlas offline 
-            y subirlas directamente al sistema o enviarlas por email al equipo de IT. Las plantillas se generan 
-            en formato .doc para máxima compatibilidad con Microsoft Word.
+            <strong>💡 Uso recomendado:</strong> Las plantillas se descargan en formato .doc para máxima compatibilidad. 
+            Después de completarlas, <strong>debes guardarlas como .docx</strong> (Archivo → Guardar como → Formato: .docx) 
+            antes de subirlas al sistema. Solo se aceptan archivos .docx para el procesamiento automático.
           </p>
         </div>
       </div>
