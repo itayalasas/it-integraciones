@@ -126,19 +126,18 @@ const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onDataProcessed, on
   const handleFile = async (file: File) => {
     // Validar tipo de archivo
     const validTypes = [
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
-      'application/msword' // .doc
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document' // .docx
     ];
 
     // Validar por extensión si el tipo MIME no es reconocido
     const fileName = file.name.toLowerCase();
-    const hasValidExtension = fileName.endsWith('.docx') || fileName.endsWith('.doc');
+    const hasValidExtension = fileName.endsWith('.docx');
     
     if (!validTypes.includes(file.type) && !hasValidExtension) {
       showNotification(
         'error',
         'Tipo de archivo no válido',
-        'Por favor, sube un archivo de Word en formato .docx o .doc'
+        'Por favor, sube un archivo de Word en formato .docx únicamente'
       );
       return;
     }
