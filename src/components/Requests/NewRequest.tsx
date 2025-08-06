@@ -19,7 +19,6 @@ import {
   Edit,
   Clock,
   Image,
-  ArrowRight,
   Database,
   Server,
   Paperclip,
