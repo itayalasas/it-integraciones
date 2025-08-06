@@ -24,7 +24,7 @@ import { departmentsService } from '../../services/departmentsService';
 import { usersService } from '../../services/usersService';
 import { useAuth } from '../../contexts/AuthContext';
 import { Link } from 'react-router-dom';
-import { wordTemplateService } from '../../services/wordTemplateService';
+import { excelTemplateService } from '../../services/excelTemplateService';
 
 // Componente para notificaciones
 interface NotificationProps {
@@ -336,18 +336,18 @@ const Settings: React.FC = () => {
     setDownloadingTemplate(true);
     try {
       if (simple) {
-        await wordTemplateService.generateSimpleTemplate();
+        await excelTemplateService.generateSimpleTemplate();
         showNotification(
           'success',
           'Plantilla descargada',
-          'La plantilla simplificada ha sido descargada exitosamente en formato .doc'
+          'La plantilla simplificada ha sido descargada exitosamente en formato Excel'
         );
       } else {
-        await wordTemplateService.generateTemplate();
+        await excelTemplateService.generateTemplate();
         showNotification(
           'success',
           'Plantilla descargada',
-          'La plantilla completa ha sido descargada exitosamente en formato .doc'
+          'La plantilla completa ha sido descargada exitosamente en formato Excel'
         );
       }
     } catch (error) {
@@ -445,7 +445,7 @@ const Settings: React.FC = () => {
               Plantillas de Solicitud
             </h2>
             <p className="text-gray-600 mt-1">
-              Descarga plantillas en formato Word para que los usuarios puedan completar solicitudes offline
+              Descarga plantillas en formato Excel para que los usuarios puedan completar solicitudes offline
             </p>
           </div>
           <div className="flex items-center space-x-3">
@@ -470,31 +470,31 @@ const Settings: React.FC = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-            <h3 className="font-medium text-green-900 mb-2">📄 Plantilla Simplificada</h3>
+            <h3 className="font-medium text-green-900 mb-2">📊 Plantilla Simplificada</h3>
             <ul className="text-sm text-green-800 space-y-1">
               <li>• Campos básicos esenciales</li>
-              <li>• Formato compacto (1-2 páginas)</li>
+              <li>• Una sola hoja de Excel</li>
               <li>• Ideal para integraciones simples</li>
               <li>• Fácil de completar</li>
             </ul>
           </div>
           
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h3 className="font-medium text-blue-900 mb-2">📋 Plantilla Completa</h3>
+            <h3 className="font-medium text-blue-900 mb-2">📈 Plantilla Completa</h3>
             <ul className="text-sm text-blue-800 space-y-1">
               <li>• Todos los campos del sistema</li>
+              <li>• Múltiples hojas organizadas</li>
               <li>• Requerimientos técnicos detallados</li>
               <li>• Casos de prueba incluidos</li>
-              <li>• Formato profesional completo</li>
             </ul>
           </div>
         </div>
         
         <div className="mt-4 p-3 bg-gray-50 rounded-lg">
           <p className="text-sm text-gray-700">
-            <strong>💡 Uso recomendado:</strong> Las plantillas se descargan en formato .docx nativo. 
-            Después de completarlas, <strong>guárdalas manteniendo el formato .docx</strong> para que el sistema 
-            pueda procesarlas automáticamente. Solo se aceptan archivos .docx para el procesamiento.
+            <strong>💡 Uso recomendado:</strong> Las plantillas se descargan en formato Excel (.xlsx). 
+            Después de completarlas, <strong>guárdalas manteniendo el formato .xlsx</strong> para que el sistema 
+            pueda procesarlas automáticamente. Excel es más fácil de editar y procesar.
           </p>
         </div>
       </div>

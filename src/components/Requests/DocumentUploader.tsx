@@ -9,7 +9,7 @@ import {
   Download,
   Eye
 } from 'lucide-react';
-import { documentProcessorService, ProcessedRequestData } from '../../services/documentProcessorService';
+import { excelProcessorService, ProcessedRequestData } from '../../services/excelProcessorService';
 
 interface DocumentUploaderProps {
   onDataProcessed: (data: ProcessedRequestData) => void;
@@ -126,18 +126,18 @@ const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onDataProcessed, on
   const handleFile = async (file: File) => {
     // Validar tipo de archivo
     const validTypes = [
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document' // .docx
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' // .xlsx
     ];
 
     // Validar por extensión si el tipo MIME no es reconocido
     const fileName = file.name.toLowerCase();
-    const hasValidExtension = fileName.endsWith('.docx');
+    const hasValidExtension = fileName.endsWith('.xlsx');
     
     if (!validTypes.includes(file.type) && !hasValidExtension) {
       showNotification(
         'error',
         'Tipo de archivo no válido',
-        'Por favor, sube un archivo de Word en formato .docx únicamente'
+        'Por favor, sube un archivo de Excel en formato .xlsx únicamente'
       );
       return;
     }
@@ -158,10 +158,10 @@ const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onDataProcessed, on
       setValidationErrors([]);
 
       // Procesar el documento
-      const data = await documentProcessorService.processWordDocument(file);
+      const data = await excelProcessorService.processExcelFile(file);
       
       // Validar los datos procesados
-      const validation = documentProcessorService.validateProcessedData(data);
+      const validation = excelProcessorService.validateProcessedData(data);
       
       setProcessedData(data);
       setValidationErrors(validation.errors);
@@ -215,10 +215,10 @@ const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onDataProcessed, on
         <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between">
           <div>
             <h3 className="text-xl font-semibold text-gray-900">
-              Cargar Documento de Solicitud
+              Cargar Plantilla Excel de Solicitud
             </h3>
             <p className="text-sm text-gray-600 mt-1">
-              Sube un documento Word completado para generar automáticamente la solicitud
+              Sube una plantilla Excel completada para generar automáticamente la solicitud
             </p>
           </div>
           <button
@@ -257,16 +257,16 @@ const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onDataProcessed, on
                     <Upload className="h-12 w-12 text-gray-400 mx-auto" />
                     <div>
                       <p className="text-lg font-medium text-gray-900">
-                        Arrastra tu documento aquí o haz clic para seleccionar
+                        Arrastra tu plantilla Excel aquí o haz clic para seleccionar
                       </p>
                       <p className="text-sm text-gray-600">
-                        Archivos soportados: .docx, .doc (máximo 10MB)
+                        Archivos soportados: .xlsx únicamente (máximo 10MB)
                       </p>
                     </div>
                     <input
                       type="file"
                       onChange={handleFileInput}
-                      accept=".docx"
+                      accept=".xlsx"
                       className="hidden"
                       id="file-upload"
                     />
@@ -285,7 +285,7 @@ const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onDataProcessed, on
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <h4 className="font-medium text-blue-900 mb-2">📋 Instrucciones:</h4>
                 <ul className="text-sm text-blue-800 space-y-1">
-                  <li>• Usa las plantillas descargadas desde Configuración</li>
+                  <li>• Usa las plantillas Excel descargadas desde Configuración</li>
                   <li>• Completa todos los campos posibles en el documento</li>
                   <li>• El sistema extraerá automáticamente la información</li>
                   <li>• Podrás revisar y editar los datos antes de crear la solicitud</li>
@@ -386,7 +386,7 @@ const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onDataProcessed, on
                   }}
                   className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
                 >
-                  Cargar Otro Documento
+                  Cargar Otra Plantilla
                 </button>
                 <button
                   onClick={handleUseData}

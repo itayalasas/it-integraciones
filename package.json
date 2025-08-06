@@ -12,8 +12,6 @@
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
     "@types/node": "^24.0.13",
-    "buffer": "^6.0.3",
-    "docx": "^9.5.1",
     "file-saver": "^2.0.5",
     "firebase": "^11.10.0",
     "lucide-react": "^0.344.0",
@@ -22,8 +20,6 @@
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.60.0",
     "react-router-dom": "^7.6.3",
-    "stream-browserify": "^3.0.0",
-    "util": "^0.12.5",
     "xlsx": "^0.18.5",
     "yup": "^1.6.1"
   },
