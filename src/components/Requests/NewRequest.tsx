@@ -25,7 +25,8 @@ import {
   Server,
   Settings,
   TestTube,
-  Send
+  Send,
+  Zap
 } from 'lucide-react';
 import { TestCase, System, Document } from '../../types';
 import { documentsService } from '../../services/documentsService';
