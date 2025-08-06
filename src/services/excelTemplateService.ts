@@ -1,10 +1,18 @@
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { systemsService } from './systemsService';
+import { departmentsService } from './departmentsService';
 
 export const excelTemplateService = {
   // Generar plantilla completa de Excel
   async generateTemplate(): Promise<void> {
     try {
+      // Cargar datos reales de la aplicación
+      const [systemsList, departmentsList] = await Promise.all([
+        systemsService.getActiveSystems(),
+        departmentsService.getActiveDepartments()
+      ]);
+
       const workbook = XLSX.utils.book_new();
 
       // Hoja de Instrucciones
@@ -17,16 +25,18 @@ export const excelTemplateService = {
         ['3. Use las hojas correspondientes para cada sección'],
         ['4. Guarde el archivo como .xlsx antes de subirlo al sistema'],
         ['5. Para casos de prueba, use una fila por cada caso'],
+        ['6. Use las listas desplegables para seleccionar opciones válidas'],
         [''],
         ['HOJAS INCLUIDAS:'],
         ['• Información General: Datos básicos de la solicitud'],
         ['• Requerimientos: Funcionales, técnicos y no funcionales'],
         ['• Casos de Prueba: Definición de pruebas'],
+        ['• Listas de Referencia: Sistemas y opciones disponibles'],
         [''],
         ['NOTAS:'],
         ['• Los campos con (*) son obligatorios'],
         ['• Use el formato de fecha DD/MM/AAAA'],
-        ['• Para listas, separe elementos con comas'],
+        ['• Use las listas desplegables cuando estén disponibles'],
         ['• Mantenga el formato original del archivo']
       ];
 
@@ -45,19 +55,75 @@ export const excelTemplateService = {
         ['Título de la Integración', '', 'SÍ', 'Nombre descriptivo de la integración'],
         ['Descripción Detallada', '', 'SÍ', 'Explicación completa del proyecto'],
         ['Solicitante', '', 'SÍ', 'Nombre completo del solicitante'],
-        ['Departamento', '', 'SÍ', 'Departamento del solicitante'],
+        ['Departamento', '', 'SÍ', 'Seleccione de la lista desplegable'],
         ['Fecha Límite', '', 'NO', 'Formato: DD/MM/AAAA'],
-        ['Prioridad', '', 'SÍ', 'Opciones: Baja, Media, Alta, Urgente'],
-        ['Sistema Principal a Integrar', '', 'SÍ', 'Sistema principal del proyecto'],
-        ['Sistema Origen', '', 'SÍ', 'Sistema que envía los datos'],
-        ['Sistema Destino', '', 'SÍ', 'Sistema que recibe los datos'],
-        ['Sistema Intermediario', '', 'NO', 'Sistema intermedio (si aplica)'],
+        ['Prioridad', '', 'SÍ', 'Seleccione de la lista desplegable'],
+        ['Sistema Principal a Integrar', '', 'SÍ', 'Seleccione de la lista desplegable'],
+        ['Sistema Origen', '', 'SÍ', 'Seleccione de la lista desplegable'],
+        ['Sistema Destino', '', 'SÍ', 'Seleccione de la lista desplegable'],
+        ['Sistema Intermediario', '', 'NO', 'Seleccione de la lista desplegable (opcional)'],
         [''],
-        ['OPCIONES VÁLIDAS PARA PRIORIDAD:'],
-        ['Baja', 'Media', 'Alta', 'Urgente']
+        ['NOTA: Use las listas desplegables en la columna "Valor" para seleccionar opciones válidas']
       ];
 
       const generalSheet = XLSX.utils.aoa_to_sheet(generalData);
+      
+      // Configurar validaciones de datos (listas desplegables)
+      if (!generalSheet['!dataValidation']) {
+        generalSheet['!dataValidation'] = {};
+      }
+
+      // Lista desplegable para Departamentos (celda B7)
+      generalSheet['!dataValidation']['B7'] = {
+        type: 'list',
+        allowBlank: false,
+        formula1: `"${departmentsList.map(d => d.name).join(',')}"`,
+        showDropDown: true
+      };
+
+      // Lista desplegable para Prioridad (celda B9)
+      generalSheet['!dataValidation']['B9'] = {
+        type: 'list',
+        allowBlank: false,
+        formula1: '"Baja,Media,Alta,Urgente"',
+        showDropDown: true
+      };
+
+      // Listas desplegables para Sistemas
+      const systemsFormula = `"${systemsList.map(s => `${s.name} (${s.technology})`).join(',')}"`;
+      
+      // Sistema Principal a Integrar (celda B10)
+      generalSheet['!dataValidation']['B10'] = {
+        type: 'list',
+        allowBlank: false,
+        formula1: systemsFormula,
+        showDropDown: true
+      };
+
+      // Sistema Origen (celda B11)
+      generalSheet['!dataValidation']['B11'] = {
+        type: 'list',
+        allowBlank: false,
+        formula1: systemsFormula,
+        showDropDown: true
+      };
+
+      // Sistema Destino (celda B12)
+      generalSheet['!dataValidation']['B12'] = {
+        type: 'list',
+        allowBlank: false,
+        formula1: systemsFormula,
+        showDropDown: true
+      };
+
+      // Sistema Intermediario (celda B13) - opcional
+      generalSheet['!dataValidation']['B13'] = {
+        type: 'list',
+        allowBlank: true,
+        formula1: `"Sin sistema intermediario,${systemsList.map(s => `${s.name} (${s.technology})`).join(',')}"`,
+        showDropDown: true
+      };
+
       generalSheet['!cols'] = [
         { wch: 25 }, // Campo
         { wch: 40 }, // Valor
@@ -97,14 +163,24 @@ export const excelTemplateService = {
         ['Confiabilidad', '', 'NO'],
         ['Mantenibilidad', '', 'NO'],
         [''],
-        ['OPCIONES PARA ARQUITECTURA:'],
-        ['API REST', 'SOAP', 'Microservicios', 'ETL', 'Batch', 'Tiempo Real'],
-        [''],
-        ['TECNOLOGÍAS COMUNES:'],
-        ['Java', '.NET', 'Python', 'Node.js', 'SQL Server', 'Oracle', 'MongoDB']
+        ['NOTA: Use las listas desplegables cuando estén disponibles']
       ];
 
       const requirementsSheet = XLSX.utils.aoa_to_sheet(requirementsData);
+      
+      // Configurar listas desplegables para requerimientos
+      if (!requirementsSheet['!dataValidation']) {
+        requirementsSheet['!dataValidation'] = {};
+      }
+
+      // Lista desplegable para Arquitectura (celda B12)
+      requirementsSheet['!dataValidation']['B12'] = {
+        type: 'list',
+        allowBlank: true,
+        formula1: '"API REST,SOAP,Microservicios,ETL,Batch,Tiempo Real"',
+        showDropDown: true
+      };
+
       requirementsSheet['!cols'] = [
         { wch: 30 }, // Campo
         { wch: 50 }, // Valor
@@ -126,11 +202,27 @@ export const excelTemplateService = {
         ['', '', '', '', '', ''],
         ['', '', '', '', '', ''],
         [''],
-        ['OPCIONES PARA PRIORIDAD DE CASOS:'],
-        ['Baja', 'Media', 'Alta']
+        ['NOTA: Use la lista desplegable en la columna "Prioridad" para seleccionar']
       ];
 
       const testCasesSheet = XLSX.utils.aoa_to_sheet(testCasesData);
+      
+      // Configurar listas desplegables para casos de prueba
+      if (!testCasesSheet['!dataValidation']) {
+        testCasesSheet['!dataValidation'] = {};
+      }
+
+      // Lista desplegable para Prioridad en casos de prueba (columna F, filas 6-10)
+      for (let row = 6; row <= 10; row++) {
+        const cellRef = `F${row}`;
+        testCasesSheet['!dataValidation'][cellRef] = {
+          type: 'list',
+          allowBlank: true,
+          formula1: '"Baja,Media,Alta"',
+          showDropDown: true
+        };
+      }
+
       testCasesSheet['!cols'] = [
         { wch: 25 }, // Título
         { wch: 35 }, // Descripción
@@ -141,6 +233,56 @@ export const excelTemplateService = {
       ];
       
       XLSX.utils.book_append_sheet(workbook, testCasesSheet, 'Casos de Prueba');
+
+      // Hoja de Listas de Referencia
+      const referenceData = [
+        ['LISTAS DE REFERENCIA'],
+        [''],
+        ['SISTEMAS DISPONIBLES'],
+        ['ID', 'Nombre', 'Tecnología', 'Tipo', 'Propietario'],
+        ...systemsList.map(system => [
+          system.id,
+          system.name,
+          system.technology,
+          system.type,
+          system.owner
+        ]),
+        [''],
+        ['DEPARTAMENTOS DISPONIBLES'],
+        ['ID', 'Nombre', 'Descripción'],
+        ...departmentsList.map(dept => [
+          dept.id,
+          dept.name,
+          dept.description
+        ]),
+        [''],
+        ['OPCIONES DE PRIORIDAD'],
+        ['Valor', 'Descripción'],
+        ['Baja', 'Para integraciones no críticas'],
+        ['Media', 'Para integraciones estándar'],
+        ['Alta', 'Para integraciones importantes'],
+        ['Urgente', 'Para integraciones críticas'],
+        [''],
+        ['OPCIONES DE ARQUITECTURA'],
+        ['Valor', 'Descripción'],
+        ['API REST', 'Servicios web RESTful'],
+        ['SOAP', 'Servicios web SOAP'],
+        ['Microservicios', 'Arquitectura de microservicios'],
+        ['ETL', 'Extract, Transform, Load'],
+        ['Batch', 'Procesamiento por lotes'],
+        ['Tiempo Real', 'Procesamiento en tiempo real']
+      ];
+
+      const referenceSheet = XLSX.utils.aoa_to_sheet(referenceData);
+      referenceSheet['!cols'] = [
+        { wch: 15 }, // ID/Valor
+        { wch: 30 }, // Nombre
+        { wch: 25 }, // Tecnología/Descripción
+        { wch: 15 }, // Tipo
+        { wch: 20 }  // Propietario
+      ];
+      
+      XLSX.utils.book_append_sheet(workbook, referenceSheet, 'Listas de Referencia');
 
       // Generar y descargar el archivo
       const excelBuffer = XLSX.write(workbook, { 
@@ -164,6 +306,12 @@ export const excelTemplateService = {
   // Generar plantilla simplificada
   async generateSimpleTemplate(): Promise<void> {
     try {
+      // Cargar datos reales de la aplicación
+      const [systemsList, departmentsList] = await Promise.all([
+        systemsService.getActiveSystems(),
+        departmentsService.getActiveDepartments()
+      ]);
+
       const workbook = XLSX.utils.book_new();
 
       // Hoja única simplificada
@@ -183,16 +331,69 @@ export const excelTemplateService = {
         ['Objetivos de Negocio', '', 'SÍ'],
         ['Requerimientos Técnicos', '', 'NO'],
         ['Fecha Límite (DD/MM/AAAA)', '', 'NO'],
-        ['Prioridad (Baja/Media/Alta/Urgente)', '', 'SÍ'],
+        ['Prioridad', '', 'SÍ'],
         ['Comentarios Adicionales', '', 'NO'],
         [''],
-        ['NOTAS:'],
-        ['• Complete solo los campos necesarios'],
-        ['• Mantenga el formato .xlsx'],
-        ['• Sea específico en las descripciones']
+        ['SISTEMAS DISPONIBLES:'],
+        ...systemsList.map(system => [`${system.name} (${system.technology})`]),
+        [''],
+        ['DEPARTAMENTOS DISPONIBLES:'],
+        ...departmentsList.map(dept => [dept.name]),
+        [''],
+        ['PRIORIDADES VÁLIDAS:'],
+        ['Baja', 'Media', 'Alta', 'Urgente']
       ];
 
       const simpleSheet = XLSX.utils.aoa_to_sheet(simpleData);
+      
+      // Configurar listas desplegables
+      if (!simpleSheet['!dataValidation']) {
+        simpleSheet['!dataValidation'] = {};
+      }
+
+      // Lista desplegable para Departamento (celda B8)
+      simpleSheet['!dataValidation']['B8'] = {
+        type: 'list',
+        allowBlank: false,
+        formula1: `"${departmentsList.map(d => d.name).join(',')}"`,
+        showDropDown: true
+      };
+
+      // Listas desplegables para Sistemas
+      const systemsFormula = `"${systemsList.map(s => `${s.name} (${s.technology})`).join(',')}"`;
+      
+      // Sistema Origen (celda B9)
+      simpleSheet['!dataValidation']['B9'] = {
+        type: 'list',
+        allowBlank: false,
+        formula1: systemsFormula,
+        showDropDown: true
+      };
+
+      // Sistema Destino (celda B10)
+      simpleSheet['!dataValidation']['B10'] = {
+        type: 'list',
+        allowBlank: false,
+        formula1: systemsFormula,
+        showDropDown: true
+      };
+
+      // Sistema Intermediario (celda B11) - con opción "Sin sistema"
+      simpleSheet['!dataValidation']['B11'] = {
+        type: 'list',
+        allowBlank: true,
+        formula1: `"Sin sistema intermediario,${systemsList.map(s => `${s.name} (${s.technology})`).join(',')}"`,
+        showDropDown: true
+      };
+
+      // Lista desplegable para Prioridad (celda B15)
+      simpleSheet['!dataValidation']['B15'] = {
+        type: 'list',
+        allowBlank: false,
+        formula1: '"Baja,Media,Alta,Urgente"',
+        showDropDown: true
+      };
+
       simpleSheet['!cols'] = [
         { wch: 35 }, // Campo
         { wch: 50 }, // Valor
