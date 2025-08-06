@@ -262,6 +262,9 @@ const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onDataProcessed, on
                       <p className="text-sm text-gray-600">
                         Archivos soportados: .docx (máximo 10MB)
                       </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Nota: Las plantillas ahora se descargan en formato .docx
+                      </p>
                     </div>
                     <input
                       type="file"

@@ -493,8 +493,8 @@ const Settings: React.FC = () => {
         <div className="mt-4 p-3 bg-gray-50 rounded-lg">
           <p className="text-sm text-gray-700">
             <strong>💡 Uso recomendado:</strong> Los usuarios pueden descargar estas plantillas, completarlas offline 
-            y enviarlas por email al equipo de IT. Luego, el equipo puede transcribir la información al sistema web 
-            para su procesamiento formal.
+            y subirlas directamente al sistema o enviarlas por email al equipo de IT. Las plantillas ahora se generan 
+            en formato .docx para compatibilidad completa con el procesador automático.
           </p>
         </div>
       </div>
