@@ -125,17 +125,30 @@ export const excelProcessorService = {
       } else if (field.includes('departamento')) {
         // No se guarda en el modelo, se asigna automáticamente
       } else if (field.includes('sistema origen')) {
-        processedData.sourceSystem = value;
+        // Extraer solo el nombre del sistema (antes del paréntesis)
+        const systemName = value.split(' (')[0].trim();
+        const systemName = value.split(' (')[0].trim();
+        processedData.sourceSystem = systemName;
       } else if (field.includes('sistema destino')) {
-        processedData.targetSystem = value;
+        const systemName = value.split(' (')[0].trim();
+        const systemName = value.split(' (')[0].trim();
+        processedData.targetSystem = systemName;
       } else if (field.includes('sistema intermediario')) {
-        processedData.intermediarySystem = value;
+        if (value !== 'Sin sistema intermediario') {
+          const systemName = value.split(' (')[0].trim();
+          processedData.intermediarySystem = systemName;
+        }
+          const systemName = value.split(' (')[0].trim();
+          processedData.intermediarySystem = systemName;
+        }
       } else if (field.includes('sistema principal') || field.includes('sistema a integrar')) {
-        processedData.systemToIntegrate = value;
+        const systemName = value.split(' (')[0].trim();
+        processedData.systemToIntegrate = systemName;
       } else if (field.includes('objetivos de negocio')) {
         processedData.functionalRequirements.businessGoals = value;
       } else if (field.includes('requerimientos técnicos')) {
-        processedData.technicalRequirements.integrationPoints = value;
+        const systemName = value.split(' (')[0].trim();
+        processedData.systemToIntegrate = systemName;
       } else if (field.includes('fecha límite')) {
         processedData.dueDate = this.parseDate(value);
       } else if (field.includes('prioridad')) {
@@ -243,7 +256,7 @@ export const excelProcessorService = {
         else if (field.includes('arquitectura')) {
           processedData.technicalRequirements.architecture = value;
         } else if (field.includes('tecnologías')) {
-          processedData.technicalRequirements.technologies = value.split(',').map(t => t.trim());
+          processedData.technicalRequirements.technologies = value.split(',').map(t => t.trim()).filter(t => t);
         } else if (field.includes('puntos de integración')) {
           processedData.technicalRequirements.integrationPoints = value;
         } else if (field.includes('flujo de datos')) {

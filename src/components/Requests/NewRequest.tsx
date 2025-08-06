@@ -180,6 +180,15 @@ const NewRequest: React.FC = () => {
   };
 
   const handleDocumentDataProcessed = (data: ProcessedRequestData) => {
+    // Función para encontrar sistema por nombre
+    const findSystemByName = (systemName: string) => {
+      if (!systemName) return '';
+      return systems.find(s => 
+        s.name.toLowerCase() === systemName.toLowerCase() ||
+        s.name.toLowerCase().includes(systemName.toLowerCase())
+      )?.id || '';
+    };
+
     // Mapear los datos procesados al estado del formulario
     setFormData(prev => ({
       ...prev,
@@ -187,10 +196,10 @@ const NewRequest: React.FC = () => {
       description: data.description || prev.description,
       priority: data.priority || prev.priority,
       dueDate: data.dueDate ? data.dueDate.toISOString().split('T')[0] : prev.dueDate,
-      systemToIntegrate: data.systemToIntegrate || prev.systemToIntegrate,
-      sourceSystem: data.sourceSystem || prev.sourceSystem,
-      targetSystem: data.targetSystem || prev.targetSystem,
-      intermediarySystem: data.intermediarySystem || prev.intermediarySystem,
+      systemToIntegrate: findSystemByName(data.systemToIntegrate) || prev.systemToIntegrate,
+      sourceSystem: findSystemByName(data.sourceSystem) || prev.sourceSystem,
+      targetSystem: findSystemByName(data.targetSystem) || prev.targetSystem,
+      intermediarySystem: findSystemByName(data.intermediarySystem || '') || prev.intermediarySystem,
       functionalRequirements: {
         businessGoals: data.functionalRequirements.businessGoals || prev.functionalRequirements.businessGoals,
         functionalRequirements: data.functionalRequirements.functionalRequirements || prev.functionalRequirements.functionalRequirements,
