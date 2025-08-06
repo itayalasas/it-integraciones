@@ -126,21 +126,18 @@ const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onDataProcessed, on
   const handleFile = async (file: File) => {
     // Validar tipo de archivo
     const validTypes = [
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
-      'application/msword', // .doc
-      'application/vnd.oasis.opendocument.text', // .odt
-      'application/octet-stream' // Fallback para algunos archivos Word
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document' // .docx
     ];
 
     // Validar por extensión si el tipo MIME no es reconocido
     const fileName = file.name.toLowerCase();
-    const hasValidExtension = fileName.endsWith('.doc') || fileName.endsWith('.docx') || fileName.endsWith('.odt');
+    const hasValidExtension = fileName.endsWith('.docx');
     
     if (!validTypes.includes(file.type) && !hasValidExtension) {
       showNotification(
         'error',
         'Tipo de archivo no válido',
-        'Por favor, sube un archivo de Word (.doc, .docx) o OpenDocument (.odt)'
+        'Por favor, sube un archivo de Word en formato .docx'
       );
       return;
     }
@@ -263,13 +260,13 @@ const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onDataProcessed, on
                         Arrastra tu documento aquí o haz clic para seleccionar
                       </p>
                       <p className="text-sm text-gray-600">
-                        Archivos soportados: .doc, .docx, .odt (máximo 10MB)
+                        Archivos soportados: .docx (máximo 10MB)
                       </p>
                     </div>
                     <input
                       type="file"
                       onChange={handleFileInput}
-                      accept=".doc,.docx,.odt"
+                      accept=".docx"
                       className="hidden"
                       id="file-upload"
                     />
