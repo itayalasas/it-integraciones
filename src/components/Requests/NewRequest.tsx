@@ -23,10 +23,8 @@ import {
   Image,
   ArrowRight,
   Database,
-  Cloud,
   Server,
   Paperclip,
-  Download,
 } from 'lucide-react';
 import { TestCase, System, Document } from '../../types';
 import { documentsService } from '../../services/documentsService';
