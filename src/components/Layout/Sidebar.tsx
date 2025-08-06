@@ -22,6 +22,7 @@ const Sidebar: React.FC = () => {
   const isAdmin = usersService.isAdmin(currentUser);
   const canApprove = usersService.canApprove(currentUser);
   const canCreateRequests = usersService.canCreateRequests(currentUser);
+  const isTechnical = usersService.isTechnical(currentUser);
 
   // Navegación base para todos los usuarios
   const baseNavigation = [
@@ -38,6 +39,9 @@ const Sidebar: React.FC = () => {
     ...(canApprove ? [
       { name: 'Aprobaciones', href: '/approvals', icon: CheckCircle },
       { name: 'Historias de Usuario', href: '/approved-requests', icon: Wand2 },
+    ] : []),
+    ...(isTechnical ? [
+      { name: 'Técnico', href: '/technical', icon: Settings },
     ] : []),
     ...(isAdmin ? [
       { name: 'Reportes', href: '/reports', icon: BarChart3 },

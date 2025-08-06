@@ -138,13 +138,19 @@ export const usersService = {
     return user?.role === 'admin' || user?.role === 'requester' || user?.email === 'pedro.ayala@segurossura.com.uy';
   },
 
+  // Verificar si un usuario es técnico
+  isTechnical(user: User | null): boolean {
+    return user?.role === 'admin' || user?.role === 'technical' || user?.email === 'pedro.ayala@segurossura.com.uy';
+  },
+
   // Obtener texto del rol
   getRoleText(role: string): string {
     const roleMap: { [key: string]: string } = {
       'admin': 'Administrador',
       'requester': 'Solicitante',
       'approver': 'Aprobador',
-      'viewer': 'Visualizador'
+      'viewer': 'Visualizador',
+      'technical': 'Técnico'
     };
     return roleMap[role] || role;
   },
@@ -156,6 +162,7 @@ export const usersService = {
       case 'approver': return 'bg-blue-100 text-blue-800';
       case 'requester': return 'bg-green-100 text-green-800';
       case 'viewer': return 'bg-gray-100 text-gray-800';
+      case 'technical': return 'bg-orange-100 text-orange-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   }

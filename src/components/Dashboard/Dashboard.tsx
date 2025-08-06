@@ -29,6 +29,7 @@ const Dashboard: React.FC = () => {
   const isAdmin = usersService.isAdmin(currentUser);
   const canApprove = usersService.canApprove(currentUser);
   const canCreateRequests = usersService.canCreateRequests(currentUser);
+  const isTechnical = usersService.isTechnical(currentUser);
 
   useEffect(() => {
     loadSystems();
@@ -134,12 +135,14 @@ const Dashboard: React.FC = () => {
         color: 'bg-blue-500'
       },
       {
-        title: 'Pendientes Aprobación',
-        value: allRequests.filter(r => ['submitted', 'in_review'].includes(r.status)).length.toString(),
+        title: isTechnical ? 'En Desarrollo' : 'Pendientes Aprobación',
+        value: isTechnical 
+          ? allRequests.filter(r => r.status === 'in_development').length.toString()
+          : allRequests.filter(r => ['submitted', 'in_review'].includes(r.status)).length.toString(),
         change: '+5%',
         changeType: 'increase',
-        icon: Clock,
-        color: 'bg-orange-500'
+        icon: isTechnical ? Activity : Clock,
+        color: isTechnical ? 'bg-purple-500' : 'bg-orange-500'
       },
       {
         title: 'Aprobadas',
@@ -150,20 +153,12 @@ const Dashboard: React.FC = () => {
         color: 'bg-green-500'
       },
       {
-        title: 'En Desarrollo',
-        value: allRequests.filter(r => r.status === 'in_development').length.toString(),
+        title: 'Completadas',
+        value: allRequests.filter(r => r.status === 'completed').length.toString(),
         change: '+2%',
         changeType: 'increase',
-        icon: Activity,
-        color: 'bg-purple-500'
-      },
-      {
-        title: 'Listas para Historia',
-        value: approvedRequests.length.toString(),
-        change: `+${approvedRequests.length}`,
-        changeType: 'increase',
-        icon: Wand2,
-        color: 'bg-indigo-500'
+        icon: CheckCircle,
+        color: 'bg-emerald-500'
       }
     ];
   };
@@ -446,6 +441,14 @@ const Dashboard: React.FC = () => {
                 </Link>
               </>
             )}
+            {isTechnical && (
+              <Link
+                to="/technical"
+                className="block w-full bg-orange-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-orange-700 transition-colors text-center"
+              >
+                Panel Técnico
+              </Link>
+            )}
             {!canCreateRequests && !(canApprove || isAdmin) && (
               <div className="text-center py-4 text-gray-500">
                 <p className="text-sm">No tienes permisos para realizar acciones</p>
@@ -458,19 +461,25 @@ const Dashboard: React.FC = () => {
         <div className="bg-white p-6 rounded-xl shadow-sm border">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Actividad Reciente</h3>
           <div className="space-y-3">
-            {isAdmin || canApprove ? (
+            {isAdmin || canApprove || isTechnical ? (
               <>
                 <div className="flex items-center space-x-3">
                   <div className="h-2 w-2 bg-green-500 rounded-full"></div>
-                  <p className="text-sm text-gray-600">Solicitud aprobada recientemente</p>
+                  <p className="text-sm text-gray-600">
+                    {isTechnical ? 'Integración completada' : 'Solicitud aprobada recientemente'}
+                  </p>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="h-2 w-2 bg-purple-500 rounded-full"></div>
+                  <p className="text-sm text-gray-600">
+                    {isTechnical ? 'Desarrollo en progreso' : 'Nueva solicitud recibida'}
+                  </p>
                 </div>
                 <div className="flex items-center space-x-3">
                   <div className="h-2 w-2 bg-orange-500 rounded-full"></div>
-                  <p className="text-sm text-gray-600">Nueva solicitud recibida</p>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="h-2 w-2 bg-blue-500 rounded-full"></div>
-                  <p className="text-sm text-gray-600">Solicitud en desarrollo</p>
+                  <p className="text-sm text-gray-600">
+                    {isTechnical ? 'Sprint asignado' : 'Solicitud en desarrollo'}
+                  </p>
                 </div>
               </>
             ) : (

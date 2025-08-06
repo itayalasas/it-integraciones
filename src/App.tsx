@@ -13,6 +13,7 @@ import Settings from './components/Settings/Settings';
 import Reports from './components/Reports/Reports';
 import ApprovedRequestsList from './components/ApprovedRequests/ApprovedRequestsList';
 import UserManagement from './components/UserManagement/UserManagement';
+import Technical from './components/Technical/Technical';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
             <Route path="requests/:id" element={<RequestDetail />} />
             <Route path="approvals" element={<ApprovalsList />} />
             <Route path="approved-requests" element={<ApprovedRequestsList />} />
+            <Route path="technical" element={<Technical />} />
             <Route path="reports" element={<Reports />} />
             <Route path="settings" element={<Settings />} />
             <Route path="users" element={<UserManagement />} />

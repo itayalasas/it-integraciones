@@ -479,6 +479,7 @@ const UserManagement: React.FC = () => {
                 >
                   <option value="requester">Solicitante</option>
                   <option value="approver">Aprobador</option>
+                  <option value="technical">Técnico</option>
                   <option value="admin">Administrador</option>
                   <option value="viewer">Visualizador</option>
                 </select>
@@ -540,6 +541,7 @@ const UserManagement: React.FC = () => {
                 <div>
                   <p><strong>Administrador:</strong> Acceso completo al sistema</p>
                   <p><strong>Aprobador:</strong> Puede aprobar/rechazar solicitudes</p>
+                  <p><strong>Técnico:</strong> Gestiona desarrollo de integraciones</p>
                 </div>
                 <div>
                   <p><strong>Solicitante:</strong> Puede crear y ver sus solicitudes</p>
@@ -600,6 +602,7 @@ const UserManagement: React.FC = () => {
               <option value="all">Todos los roles</option>
               <option value="admin">Administrador</option>
               <option value="approver">Aprobador</option>
+              <option value="technical">Técnico</option>
               <option value="requester">Solicitante</option>
               <option value="viewer">Visualizador</option>
             </select>
