@@ -340,14 +340,14 @@ const Settings: React.FC = () => {
         showNotification(
           'success',
           'Plantilla descargada',
-          'La plantilla simplificada ha sido descargada exitosamente.'
+          'La plantilla simplificada ha sido descargada exitosamente en formato .doc'
         );
       } else {
         await wordTemplateService.generateTemplate();
         showNotification(
           'success',
           'Plantilla descargada',
-          'La plantilla completa ha sido descargada exitosamente.'
+          'La plantilla completa ha sido descargada exitosamente en formato .doc'
         );
       }
     } catch (error) {
@@ -493,8 +493,8 @@ const Settings: React.FC = () => {
         <div className="mt-4 p-3 bg-gray-50 rounded-lg">
           <p className="text-sm text-gray-700">
             <strong>💡 Uso recomendado:</strong> Los usuarios pueden descargar estas plantillas, completarlas offline 
-            y subirlas directamente al sistema o enviarlas por email al equipo de IT. Las plantillas ahora se generan 
-            en formato .docx para compatibilidad completa con el procesador automático.
+            y subirlas directamente al sistema o enviarlas por email al equipo de IT. Las plantillas se generan 
+            en formato .doc para máxima compatibilidad con Microsoft Word.
           </p>
         </div>
       </div>

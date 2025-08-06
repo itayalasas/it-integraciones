@@ -5,12 +5,20 @@ export const wordTemplateService = {
   async generateTemplate(): Promise<void> {
     try {
       // Crear el contenido HTML que se convertirá a Word
-      const htmlContent = `
-        <!DOCTYPE html>
-        <html>
+      const htmlContent = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
         <head>
-          <meta charset="UTF-8">
+          <meta charset="utf-8">
           <title>Plantilla - Solicitud de Integración</title>
+          <!--[if gte mso 9]>
+          <xml>
+            <w:WordDocument>
+              <w:View>Print</w:View>
+              <w:Zoom>90</w:Zoom>
+              <w:DoNotPromptForConvert/>
+              <w:DoNotShowInsertionsAndDeletions/>
+            </w:WordDocument>
+          </xml>
+          <![endif]-->
           <style>
             body {
               font-family: 'Calibri', Arial, sans-serif;
@@ -609,11 +617,11 @@ export const wordTemplateService = {
 
       // Crear un blob con el contenido HTML
       const blob = new Blob([htmlContent], { 
-        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        type: 'application/msword'
       });
       
       // Generar nombre del archivo con fecha
-      const fileName = `Plantilla_Solicitud_Integracion_${new Date().toISOString().split('T')[0]}.docx`;
+      const fileName = `Plantilla_Solicitud_Integracion_${new Date().toISOString().split('T')[0]}.doc`;
       
       // Descargar el archivo
       saveAs(blob, fileName);
@@ -627,12 +635,20 @@ export const wordTemplateService = {
   // Generar plantilla simplificada (versión corta)
   async generateSimpleTemplate(): Promise<void> {
     try {
-      const htmlContent = `
-        <!DOCTYPE html>
-        <html>
+      const htmlContent = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
         <head>
-          <meta charset="UTF-8">
+          <meta charset="utf-8">
           <title>Plantilla Simplificada - Solicitud de Integración</title>
+          <!--[if gte mso 9]>
+          <xml>
+            <w:WordDocument>
+              <w:View>Print</w:View>
+              <w:Zoom>90</w:Zoom>
+              <w:DoNotPromptForConvert/>
+              <w:DoNotShowInsertionsAndDeletions/>
+            </w:WordDocument>
+          </xml>
+          <![endif]-->
           <style>
             body {
               font-family: 'Calibri', Arial, sans-serif;
@@ -744,10 +760,10 @@ export const wordTemplateService = {
       `;
 
       const blob = new Blob([htmlContent], { 
-        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        type: 'application/msword'
       });
       
-      const fileName = `Plantilla_Simplificada_Integracion_${new Date().toISOString().split('T')[0]}.docx`;
+      const fileName = `Plantilla_Simplificada_Integracion_${new Date().toISOString().split('T')[0]}.doc`;
       saveAs(blob, fileName);
 
     } catch (error) {

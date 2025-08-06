@@ -126,18 +126,19 @@ const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onDataProcessed, on
   const handleFile = async (file: File) => {
     // Validar tipo de archivo
     const validTypes = [
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document' // .docx
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
+      'application/msword' // .doc
     ];
 
     // Validar por extensión si el tipo MIME no es reconocido
     const fileName = file.name.toLowerCase();
-    const hasValidExtension = fileName.endsWith('.docx');
+    const hasValidExtension = fileName.endsWith('.docx') || fileName.endsWith('.doc');
     
     if (!validTypes.includes(file.type) && !hasValidExtension) {
       showNotification(
         'error',
         'Tipo de archivo no válido',
-        'Por favor, sube un archivo de Word en formato .docx'
+        'Por favor, sube un archivo de Word en formato .docx o .doc'
       );
       return;
     }
@@ -260,16 +261,13 @@ const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onDataProcessed, on
                         Arrastra tu documento aquí o haz clic para seleccionar
                       </p>
                       <p className="text-sm text-gray-600">
-                        Archivos soportados: .docx (máximo 10MB)
-                      </p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        Nota: Las plantillas ahora se descargan en formato .docx
+                        Archivos soportados: .docx, .doc (máximo 10MB)
                       </p>
                     </div>
                     <input
                       type="file"
                       onChange={handleFileInput}
-                      accept=".docx"
+                      accept=".docx,.doc"
                       className="hidden"
                       id="file-upload"
                     />
