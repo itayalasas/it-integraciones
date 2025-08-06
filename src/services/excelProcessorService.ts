@@ -127,17 +127,12 @@ export const excelProcessorService = {
       } else if (field.includes('sistema origen')) {
         // Extraer solo el nombre del sistema (antes del paréntesis)
         const systemName = value.split(' (')[0].trim();
-        const systemName = value.split(' (')[0].trim();
         processedData.sourceSystem = systemName;
       } else if (field.includes('sistema destino')) {
-        const systemName = value.split(' (')[0].trim();
         const systemName = value.split(' (')[0].trim();
         processedData.targetSystem = systemName;
       } else if (field.includes('sistema intermediario')) {
         if (value !== 'Sin sistema intermediario') {
-          const systemName = value.split(' (')[0].trim();
-          processedData.intermediarySystem = systemName;
-        }
           const systemName = value.split(' (')[0].trim();
           processedData.intermediarySystem = systemName;
         }
@@ -147,8 +142,7 @@ export const excelProcessorService = {
       } else if (field.includes('objetivos de negocio')) {
         processedData.functionalRequirements.businessGoals = value;
       } else if (field.includes('requerimientos técnicos')) {
-        const systemName = value.split(' (')[0].trim();
-        processedData.systemToIntegrate = systemName;
+        processedData.technicalRequirements.architecture = value;
       } else if (field.includes('fecha límite')) {
         processedData.dueDate = this.parseDate(value);
       } else if (field.includes('prioridad')) {
