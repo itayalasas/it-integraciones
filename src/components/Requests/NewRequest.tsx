@@ -14,7 +14,6 @@ import {
   Upload,
   X,
   FileText,
-  Settings,
   Building,
   Save,
   Edit,
