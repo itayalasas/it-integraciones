@@ -55,95 +55,77 @@ export const excelTemplateService = {
         ['Título de la Integración', '', 'SÍ', 'Nombre descriptivo de la integración'],
         ['Descripción Detallada', '', 'SÍ', 'Explicación completa del proyecto'],
         ['Solicitante', '', 'SÍ', 'Nombre completo del solicitante'],
-        ['Departamento', '', 'SÍ', 'Seleccione de la lista desplegable'],
+        ['Departamento', departmentsList.length > 0 ? departmentsList[0].name : 'IT', 'SÍ', 'Seleccione de la lista desplegable'],
         ['Fecha Límite', '', 'NO', 'Formato: DD/MM/AAAA'],
-        ['Prioridad', '', 'SÍ', 'Seleccione de la lista desplegable'],
-        ['Sistema Principal a Integrar', '', 'SÍ', 'Seleccione de la lista desplegable'],
-        ['Sistema Origen', '', 'SÍ', 'Seleccione de la lista desplegable'],
-        ['Sistema Destino', '', 'SÍ', 'Seleccione de la lista desplegable'],
-        ['Sistema Intermediario', '', 'NO', 'Seleccione de la lista desplegable (opcional)'],
+        ['Prioridad', 'Media', 'SÍ', 'Seleccione de la lista desplegable'],
+        ['Sistema Principal a Integrar', systemsList.length > 0 ? `${systemsList[0].name} (${systemsList[0].technology})` : '', 'SÍ', 'Seleccione de la lista desplegable'],
+        ['Sistema Origen', systemsList.length > 0 ? `${systemsList[0].name} (${systemsList[0].technology})` : '', 'SÍ', 'Seleccione de la lista desplegable'],
+        ['Sistema Destino', systemsList.length > 1 ? `${systemsList[1].name} (${systemsList[1].technology})` : '', 'SÍ', 'Seleccione de la lista desplegable'],
+        ['Sistema Intermediario', 'Sin sistema intermediario', 'NO', 'Seleccione de la lista desplegable (opcional)'],
         [''],
         ['NOTA: Use las listas desplegables en la columna "Valor" para seleccionar opciones válidas']
       ];
 
       const generalSheet = XLSX.utils.aoa_to_sheet(generalData);
       
-      // Configurar validaciones de datos (listas desplegables)
-      // Cambiar el texto de las celdas para mostrar las opciones disponibles
-      generalData[6][1] = departmentsList.length > 0 ? departmentsList[0].name : 'IT'; // Departamento por defecto
-      generalData[8][1] = 'Media'; // Prioridad por defecto
-      generalData[9][1] = systemsList.length > 0 ? `${systemsList[0].name} (${systemsList[0].technology})` : ''; // Sistema principal
-      generalData[10][1] = systemsList.length > 0 ? `${systemsList[0].name} (${systemsList[0].technology})` : ''; // Sistema origen
-      generalData[11][1] = systemsList.length > 1 ? `${systemsList[1].name} (${systemsList[1].technology})` : ''; // Sistema destino
-      generalData[12][1] = 'Sin sistema intermediario'; // Sistema intermediario
-      
-      // Recrear la hoja con los datos actualizados
-      const updatedGeneralSheet = XLSX.utils.aoa_to_sheet(generalData);
-      
-      // Ahora aplicar las validaciones de datos
-      if (!updatedGeneralSheet['!dataValidation']) {
-        updatedGeneralSheet['!dataValidation'] = {};
+      // Aplicar validaciones de datos (listas desplegables)
+      if (!generalSheet['!dataValidation']) {
+        generalSheet['!dataValidation'] = {};
       }
 
-      // Lista desplegable para Departamentos (celda B9)
-      updatedGeneralSheet['!dataValidation']['B9'] = {
+      // Lista desplegable para Departamentos (celda B7)
+      generalSheet['!dataValidation']['B7'] = {
         type: 'list',
         allowBlank: false,
-        formula1: `"${departmentsList.map(d => d.name).join(',')}"`,
-        showDropDown: true
+        formula1: departmentsList.map(d => d.name).join(',')
       };
 
-      // Lista desplegable para Prioridad (celda B16)
-      updatedGeneralSheet['!dataValidation']['B16'] = {
+      // Lista desplegable para Prioridad (celda B9)
+      generalSheet['!dataValidation']['B9'] = {
         type: 'list',
         allowBlank: false,
-        formula1: '"Baja,Media,Alta,Urgente"',
-        showDropDown: true
+        formula1: 'Baja,Media,Alta,Urgente'
       };
 
       // Listas desplegables para Sistemas
-      const systemsFormula = `"${systemsList.map(s => `${s.name} (${s.technology})`).join(',')}"`;
+      const systemsOptions = systemsList.map(s => `${s.name} (${s.technology})`).join(',');
       
       // Sistema Principal a Integrar (celda B10)
-      updatedGeneralSheet['!dataValidation']['B10'] = {
+      generalSheet['!dataValidation']['B10'] = {
         type: 'list',
         allowBlank: false,
-        formula1: systemsFormula,
-        showDropDown: true
+        formula1: systemsOptions
       };
 
       // Sistema Origen (celda B11)
-      updatedGeneralSheet['!dataValidation']['B11'] = {
+      generalSheet['!dataValidation']['B11'] = {
         type: 'list',
         allowBlank: false,
-        formula1: systemsFormula,
-        showDropDown: true
+        formula1: systemsOptions
       };
 
       // Sistema Destino (celda B12)
-      updatedGeneralSheet['!dataValidation']['B12'] = {
+      generalSheet['!dataValidation']['B12'] = {
         type: 'list',
         allowBlank: false,
-        formula1: systemsFormula,
-        showDropDown: true
+        formula1: systemsOptions
       };
 
       // Sistema Intermediario (celda B13) - opcional
-      updatedGeneralSheet['!dataValidation']['B13'] = {
+      generalSheet['!dataValidation']['B13'] = {
         type: 'list',
         allowBlank: true,
-        formula1: `"Sin sistema intermediario,${systemsList.map(s => `${s.name} (${s.technology})`).join(',')}"`,
-        showDropDown: true
+        formula1: `Sin sistema intermediario,${systemsOptions}`
       };
 
-      updatedGeneralSheet['!cols'] = [
+      generalSheet['!cols'] = [
         { wch: 25 }, // Campo
         { wch: 40 }, // Valor
         { wch: 12 }, // Obligatorio
         { wch: 35 }  // Descripción
       ];
       
-      XLSX.utils.book_append_sheet(workbook, updatedGeneralSheet, 'Información General');
+      XLSX.utils.book_append_sheet(workbook, generalSheet, 'Información General');
 
       // Hoja de Requerimientos
       const requirementsData = [
@@ -189,8 +171,7 @@ export const excelTemplateService = {
       requirementsSheet['!dataValidation']['B12'] = {
         type: 'list',
         allowBlank: true,
-        formula1: '"API REST,SOAP,Microservicios,ETL,Batch,Tiempo Real"',
-        showDropDown: true
+        formula1: 'API REST,SOAP,Microservicios,ETL,Batch,Tiempo Real'
       };
 
       requirementsSheet['!cols'] = [
@@ -230,8 +211,7 @@ export const excelTemplateService = {
         testCasesSheet['!dataValidation'][cellRef] = {
           type: 'list',
           allowBlank: true,
-          formula1: '"Baja,Media,Alta"',
-          showDropDown: true
+          formula1: 'Baja,Media,Alta'
         };
       }
 
@@ -360,22 +340,108 @@ export const excelTemplateService = {
       
       // Configurar listas desplegables
       // Actualizar los datos con valores por defecto
-      simpleData[8][1] = departmentsList.length > 0 ? departmentsList[0].name : 'IT'; // Departamento
-      simpleData[9][1] = systemsList.length > 0 ? `${systemsList[0].name} (${systemsList[0].technology})` : ''; // Sistema Origen
-      simpleData[10][1] = systemsList.length > 1 ? `${systemsList[1].name} (${systemsList[1].technology})` : ''; // Sistema Destino
-      simpleData[11][1] = 'Sin sistema intermediario'; // Sistema Intermediario
-      simpleData[15][1] = 'Media'; // Prioridad
+      // Encontrar las filas correctas por contenido
+      for (let i = 0; i < simpleData.length; i++) {
+        const row = simpleData[i];
+        if (!row || !row[0]) continue;
+        
+        const field = String(row[0]).toLowerCase();
+        if (field.includes('departamento')) {
+          row[1] = departmentsList.length > 0 ? departmentsList[0].name : 'IT';
+        } else if (field.includes('sistema origen')) {
+          row[1] = systemsList.length > 0 ? `${systemsList[0].name} (${systemsList[0].technology})` : '';
+        } else if (field.includes('sistema destino')) {
+          row[1] = systemsList.length > 1 ? `${systemsList[1].name} (${systemsList[1].technology})` : '';
+        } else if (field.includes('sistema intermediario')) {
+          row[1] = 'Sin sistema intermediario';
+        } else if (field.includes('prioridad')) {
+          row[1] = 'Media';
+        }
+      }
       
-      // Recrear la hoja con datos actualizados
-      const updatedSimpleSheet = XLSX.utils.aoa_to_sheet(simpleData);
+      const simpleSheet = XLSX.utils.aoa_to_sheet(simpleData);
       
-      // Ahora aplicar las validaciones de datos
-      if (!updatedSimpleSheet['!dataValidation']) {
-        updatedSimpleSheet['!dataValidation'] = {};
+      // Aplicar las validaciones de datos
+      if (!simpleSheet['!dataValidation']) {
+        simpleSheet['!dataValidation'] = {};
       }
 
-      // Lista desplegable para Departamento (celda B9)
-      updatedSimpleSheet['!dataValidation']['B9'] = {
+      // Encontrar las celdas correctas para aplicar validaciones
+      const departmentRow = simpleData.findIndex(row => row[0] && String(row[0]).toLowerCase().includes('departamento'));
+      const priorityRow = simpleData.findIndex(row => row[0] && String(row[0]).toLowerCase().includes('prioridad'));
+      const systemOriginRow = simpleData.findIndex(row => row[0] && String(row[0]).toLowerCase().includes('sistema origen'));
+      const systemDestinationRow = simpleData.findIndex(row => row[0] && String(row[0]).toLowerCase().includes('sistema destino'));
+      const systemIntermediaryRow = simpleData.findIndex(row => row[0] && String(row[0]).toLowerCase().includes('sistema intermediario'));
+      
+      if (departmentRow > 0) {
+        simpleSheet['!dataValidation'][`B${departmentRow + 1}`] = {
+          type: 'list',
+          allowBlank: false,
+          formula1: departmentsList.map(d => d.name).join(',')
+        };
+      }
+
+      if (priorityRow > 0) {
+        simpleSheet['!dataValidation'][`B${priorityRow + 1}`] = {
+          type: 'list',
+          allowBlank: false,
+          formula1: 'Baja,Media,Alta,Urgente'
+        };
+      }
+
+      const systemsOptions = systemsList.map(s => `${s.name} (${s.technology})`).join(',');
+      
+      if (systemOriginRow > 0) {
+        simpleSheet['!dataValidation'][`B${systemOriginRow + 1}`] = {
+          type: 'list',
+          allowBlank: false,
+          formula1: systemsOptions
+        };
+      }
+
+      if (systemDestinationRow > 0) {
+        simpleSheet['!dataValidation'][`B${systemDestinationRow + 1}`] = {
+          type: 'list',
+          allowBlank: false,
+          formula1: systemsOptions
+        };
+      }
+
+      if (systemIntermediaryRow > 0) {
+        simpleSheet['!dataValidation'][`B${systemIntermediaryRow + 1}`] = {
+          type: 'list',
+          allowBlank: true,
+          formula1: `Sin sistema intermediario,${systemsOptions}`
+        };
+      }
+
+      simpleSheet['!cols'] = [
+        { wch: 35 }, // Campo
+        { wch: 50 }, // Valor
+        { wch: 12 }  // Obligatorio
+      ];
+      
+      XLSX.utils.book_append_sheet(workbook, simpleSheet, 'Solicitud');
+
+      // Generar y descargar el archivo
+      const excelBuffer = XLSX.write(workbook, { 
+        bookType: 'xlsx', 
+        type: 'array'
+      });
+      
+      const data = new Blob([excelBuffer], { 
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      });
+      
+      const fileName = `Plantilla_Simplificada_Integracion_${new Date().toISOString().split('T')[0]}.xlsx`;
+      saveAs(data, fileName);
+
+    } catch (error) {
+      console.error('Error generating simple Excel template:', error);
+      throw error;
+    }
+  }
+};
         type: 'list',
         allowBlank: false,
         formula1: `"${departmentsList.map(d => d.name).join(',')}"`,
