@@ -26,6 +26,8 @@ import {
 import { TestCase, System, Document } from '../../types';
 import { documentsService } from '../../services/documentsService';
 import { departmentsService } from '../../services/departmentsService';
+import DocumentUploader from './DocumentUploader';
+import { ProcessedRequestData } from '../../services/documentProcessorService';
 
 // Componente para notificaciones
 interface NotificationProps {
@@ -137,6 +139,7 @@ const NewRequest: React.FC = () => {
   const [uploadingDocument, setUploadingDocument] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const documentInputRef = useRef<HTMLInputElement>(null);
+  const [showDocumentUploader, setShowDocumentUploader] = useState(false);
   const [notification, setNotification] = useState<{
     type: 'success' | 'error' | 'warning' | 'info';
     title: string;
@@ -226,6 +229,65 @@ const NewRequest: React.FC = () => {
     } catch (error) {
       console.error('Error loading departments:', error);
     }
+  };
+
+  const handleDocumentProcessed = (processedData: ProcessedRequestData) => {
+    // Mapear los datos procesados al estado del formulario
+    setFormData(prev => ({
+      ...prev,
+      title: processedData.title || prev.title,
+      description: processedData.description || prev.description,
+      priority: processedData.priority || prev.priority,
+      dueDate: processedData.dueDate ? processedData.dueDate.toISOString().split('T')[0] : prev.dueDate,
+      systemToIntegrate: processedData.systemToIntegrate || prev.systemToIntegrate,
+      sourceSystem: processedData.sourceSystem || prev.sourceSystem,
+      targetSystem: processedData.targetSystem || prev.targetSystem,
+      intermediarySystem: processedData.intermediarySystem || prev.intermediarySystem,
+      functionalRequirements: {
+        businessGoals: processedData.functionalRequirements.businessGoals || prev.functionalRequirements.businessGoals,
+        functionalRequirements: processedData.functionalRequirements.functionalRequirements || prev.functionalRequirements.functionalRequirements,
+        acceptanceCriteria: processedData.functionalRequirements.acceptanceCriteria || prev.functionalRequirements.acceptanceCriteria,
+        businessRules: processedData.functionalRequirements.businessRules || prev.functionalRequirements.businessRules
+      },
+      technicalRequirements: {
+        architecture: processedData.technicalRequirements.architecture || prev.technicalRequirements.architecture,
+        technologies: processedData.technicalRequirements.technologies.length > 0 
+          ? processedData.technicalRequirements.technologies 
+          : prev.technicalRequirements.technologies,
+        integrationPoints: processedData.technicalRequirements.integrationPoints || prev.technicalRequirements.integrationPoints,
+        dataFlow: processedData.technicalRequirements.dataFlow || prev.technicalRequirements.dataFlow,
+        securityRequirements: processedData.technicalRequirements.securityRequirements || prev.technicalRequirements.securityRequirements,
+        performanceRequirements: processedData.technicalRequirements.performanceRequirements || prev.technicalRequirements.performanceRequirements,
+        serviceUrl: processedData.technicalRequirements.serviceUrl || prev.technicalRequirements.serviceUrl,
+        credentials: processedData.technicalRequirements.credentials || prev.technicalRequirements.credentials
+      },
+      nonFunctionalRequirements: {
+        availability: processedData.nonFunctionalRequirements.availability || prev.nonFunctionalRequirements.availability,
+        scalability: processedData.nonFunctionalRequirements.scalability || prev.nonFunctionalRequirements.scalability,
+        usability: processedData.nonFunctionalRequirements.usability || prev.nonFunctionalRequirements.usability,
+        reliability: processedData.nonFunctionalRequirements.reliability || prev.nonFunctionalRequirements.reliability,
+        maintenance: processedData.nonFunctionalRequirements.maintenance || prev.nonFunctionalRequirements.maintenance
+      }
+    }));
+
+    // Mapear casos de prueba
+    if (processedData.testCases.length > 0) {
+      setTestCases(processedData.testCases.map((testCase, index) => ({
+        id: (Date.now() + index).toString(),
+        title: testCase.title,
+        description: testCase.description,
+        preconditions: testCase.preconditions,
+        steps: testCase.steps,
+        expectedResult: testCase.expectedResult,
+        priority: testCase.priority
+      })));
+    }
+
+    showNotification(
+      'success',
+      'Datos cargados exitosamente',
+      'Los datos del documento han sido cargados en el formulario. Revisa y completa los campos faltantes.'
+    );
   };
 
   const tabs = [
@@ -436,6 +498,15 @@ const NewRequest: React.FC = () => {
           <p className="text-gray-600 mt-1">
             Completa todos los campos para crear una solicitud detallada
           </p>
+        </div>
+        <div className="flex items-center space-x-4">
+          <button
+            onClick={() => setShowDocumentUploader(true)}
+            className="flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+          >
+            <Upload className="h-4 w-4" />
+            <span>Cargar Documento</span>
+          </button>
         </div>
       </div>
 
@@ -1227,6 +1298,14 @@ const NewRequest: React.FC = () => {
           </div>
         </div>
       </form>
+
+      {/* Modal de carga de documentos */}
+      {showDocumentUploader && (
+        <DocumentUploader
+          onDataProcessed={handleDocumentProcessed}
+          onClose={() => setShowDocumentUploader(false)}
+        />
+      )}
     </div>
   );
 };
