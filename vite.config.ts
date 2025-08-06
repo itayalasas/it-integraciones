@@ -11,7 +11,9 @@ export default defineConfig({
   resolve: {
     alias: {
       buffer: 'buffer',
-      nodebuffer: 'buffer'
+      nodebuffer: 'buffer',
+      stream: 'stream-browserify',
+      util: 'util'
     }
   },
   optimizeDeps: {
