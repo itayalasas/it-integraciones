@@ -70,8 +70,8 @@ export const excelTemplateService = {
       
       // Configurar validaciones de datos (listas desplegables)
       // Cambiar el texto de las celdas para mostrar las opciones disponibles
-      generalData[8][1] = departmentsList.length > 0 ? departmentsList[0].name : 'IT'; // Departamento por defecto
-      generalData[15][1] = 'Media'; // Prioridad por defecto
+      generalData[6][1] = departmentsList.length > 0 ? departmentsList[0].name : 'IT'; // Departamento por defecto
+      generalData[8][1] = 'Media'; // Prioridad por defecto
       generalData[9][1] = systemsList.length > 0 ? `${systemsList[0].name} (${systemsList[0].technology})` : ''; // Sistema principal
       generalData[10][1] = systemsList.length > 0 ? `${systemsList[0].name} (${systemsList[0].technology})` : ''; // Sistema origen
       generalData[11][1] = systemsList.length > 1 ? `${systemsList[1].name} (${systemsList[1].technology})` : ''; // Sistema destino
