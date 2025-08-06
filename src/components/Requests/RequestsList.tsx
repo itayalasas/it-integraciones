@@ -383,6 +383,7 @@ const RequestsList: React.FC = () => {
                       )}
                       
                       {/* Botón para editar solicitud enviada */}
+                    </div>
                   </div>
                 </div>
               );
