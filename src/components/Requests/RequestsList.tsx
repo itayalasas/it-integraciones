@@ -10,7 +10,9 @@ import {
   XCircle,
   AlertCircle,
   Eye,
-  X
+  X,
+  Edit,
+  FileEdit
 } from 'lucide-react';
 import { IntegrationRequest } from '../../types';
 import { requestsService } from '../../services/requestsService';
@@ -369,6 +371,12 @@ const RequestsList: React.FC = () => {
                         <span>Ver</span>
                       </Link>
                     </div>
+                    {request.status === 'draft' && (
+                      <span className="px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                        <FileEdit className="h-3 w-3 inline mr-1" />
+                        Borrador
+                      </span>
+                    )}
                   </div>
                 </div>
               );
@@ -380,4 +388,26 @@ const RequestsList: React.FC = () => {
   );
 };
 
+                  
+                  {/* Botón para continuar borrador */}
+                  {request.status === 'draft' && (
+                    <Link
+                      to={`/requests/new?draft=${request.id}`}
+                      className="flex items-center space-x-2 bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                      <FileEdit className="h-4 w-4" />
+                      <span>Continuar</span>
+                    </Link>
+                  )}
+                  
+                  {/* Botón para editar solicitud enviada */}
+                  {request.status === 'submitted' && (
+                    <Link
+                      to={`/requests/new?edit=${request.id}`}
+                      className="flex items-center space-x-2 bg-orange-600 text-white px-3 py-2 rounded-lg hover:bg-orange-700 transition-colors"
+                    >
+                      <Edit className="h-4 w-4" />
+                      <span>Editar</span>
+                    </Link>
+                  )}
 export default RequestsList;

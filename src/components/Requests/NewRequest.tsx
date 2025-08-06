@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { systemsService } from '../../services/systemsService';
 import { requestsService } from '../../services/requestsService';
@@ -15,7 +15,10 @@ import {
   FileText,
   Code,
   Settings,
-  TestTube,
+  Building,
+  Save,
+  Edit,
+  Clock
   Upload,
   Image,
   ArrowRight,

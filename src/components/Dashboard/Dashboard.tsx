@@ -96,6 +96,14 @@ const Dashboard: React.FC = () => {
         color: 'bg-blue-500'
       },
       {
+        title: 'Borradores',
+        value: userRequests.filter(r => r.status === 'draft').length.toString(),
+        change: '0%',
+        changeType: 'neutral',
+        icon: FileText,
+        color: 'bg-yellow-500'
+      },
+      {
         title: 'En Revisión',
         value: userRequests.filter(r => ['submitted', 'in_review'].includes(r.status)).length.toString(),
         change: '0%',
@@ -110,14 +118,6 @@ const Dashboard: React.FC = () => {
         changeType: 'increase',
         icon: CheckCircle,
         color: 'bg-green-500'
-      },
-      {
-        title: 'Completadas',
-        value: userRequests.filter(r => r.status === 'completed').length.toString(),
-        change: '+' + userRequests.filter(r => r.status === 'completed').length,
-        changeType: 'increase',
-        icon: Activity,
-        color: 'bg-purple-500'
       }
     ];
   };
