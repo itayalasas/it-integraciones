@@ -17,12 +17,14 @@ import {
   CheckCircle,
   AlertCircle
 } from 'lucide-react';
+import { Download, FileText } from 'lucide-react';
 import { System } from '../../types';
 import { systemsService } from '../../services/systemsService';
 import { departmentsService } from '../../services/departmentsService';
 import { usersService } from '../../services/usersService';
 import { useAuth } from '../../contexts/AuthContext';
 import { Link } from 'react-router-dom';
+import { wordTemplateService } from '../../services/wordTemplateService';
 
 // Componente para notificaciones
 interface NotificationProps {
@@ -111,6 +113,7 @@ const Settings: React.FC = () => {
     title: string;
     message: string;
   } | null>(null);
+  const [downloadingTemplate, setDownloadingTemplate] = useState(false);
   const { currentUser } = useAuth();
 
   // Función para mostrar notificaciones
@@ -329,6 +332,35 @@ const Settings: React.FC = () => {
     setShowDepartmentForm(false);
   };
 
+  const handleDownloadTemplate = async (simple: boolean = false) => {
+    setDownloadingTemplate(true);
+    try {
+      if (simple) {
+        await wordTemplateService.generateSimpleTemplate();
+        showNotification(
+          'success',
+          'Plantilla descargada',
+          'La plantilla simplificada ha sido descargada exitosamente.'
+        );
+      } else {
+        await wordTemplateService.generateTemplate();
+        showNotification(
+          'success',
+          'Plantilla descargada',
+          'La plantilla completa ha sido descargada exitosamente.'
+        );
+      }
+    } catch (error) {
+      console.error('Error downloading template:', error);
+      showNotification(
+        'error',
+        'Error al descargar plantilla',
+        'No se pudo descargar la plantilla. Intenta nuevamente.'
+      );
+    } finally {
+      setDownloadingTemplate(false);
+    }
+  };
   const getSystemIcon = (type: string) => {
     switch (type) {
       case 'cloud': return Cloud;
@@ -404,6 +436,68 @@ const Settings: React.FC = () => {
         </div>
       </div>
 
+      {/* Sección de Plantillas de Word */}
+      <div className="bg-white p-6 rounded-xl shadow-sm border">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900 flex items-center">
+              <FileText className="h-6 w-6 mr-2 text-green-600" />
+              Plantillas de Solicitud
+            </h2>
+            <p className="text-gray-600 mt-1">
+              Descarga plantillas en formato Word para que los usuarios puedan completar solicitudes offline
+            </p>
+          </div>
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={() => handleDownloadTemplate(true)}
+              disabled={downloadingTemplate}
+              className="flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+            >
+              <Download className="h-4 w-4" />
+              <span>{downloadingTemplate ? 'Descargando...' : 'Plantilla Simplificada'}</span>
+            </button>
+            <button
+              onClick={() => handleDownloadTemplate(false)}
+              disabled={downloadingTemplate}
+              className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+            >
+              <Download className="h-4 w-4" />
+              <span>{downloadingTemplate ? 'Descargando...' : 'Plantilla Completa'}</span>
+            </button>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+            <h3 className="font-medium text-green-900 mb-2">📄 Plantilla Simplificada</h3>
+            <ul className="text-sm text-green-800 space-y-1">
+              <li>• Campos básicos esenciales</li>
+              <li>• Formato compacto (1-2 páginas)</li>
+              <li>• Ideal para integraciones simples</li>
+              <li>• Fácil de completar</li>
+            </ul>
+          </div>
+          
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <h3 className="font-medium text-blue-900 mb-2">📋 Plantilla Completa</h3>
+            <ul className="text-sm text-blue-800 space-y-1">
+              <li>• Todos los campos del sistema</li>
+              <li>• Requerimientos técnicos detallados</li>
+              <li>• Casos de prueba incluidos</li>
+              <li>• Formato profesional completo</li>
+            </ul>
+          </div>
+        </div>
+        
+        <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+          <p className="text-sm text-gray-700">
+            <strong>💡 Uso recomendado:</strong> Los usuarios pueden descargar estas plantillas, completarlas offline 
+            y enviarlas por email al equipo de IT. Luego, el equipo puede transcribir la información al sistema web 
+            para su procesamiento formal.
+          </p>
+        </div>
+      </div>
       {/* Sección de Gestión de Usuarios */}
       <div className="bg-white p-6 rounded-xl shadow-sm border">
         <div className="flex items-center justify-between mb-6">
