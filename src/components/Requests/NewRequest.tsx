@@ -18,7 +18,7 @@ import {
   Building,
   Save,
   Edit,
-  Clock
+  Clock,
   Image,
   ArrowRight,
   Database,
