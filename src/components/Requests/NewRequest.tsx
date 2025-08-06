@@ -22,7 +22,6 @@ import {
   Code,
   Database,
   Server,
-  Paperclip,
   Settings
 } from 'lucide-react';
 import { TestCase, System, Document } from '../../types';
