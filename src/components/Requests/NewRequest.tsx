@@ -23,7 +23,8 @@ import {
   Database,
   Server,
   Paperclip,
-} from 'lucide-react';
+  Paperclip,
+  Settings
 import { TestCase, System, Document } from '../../types';
 import { documentsService } from '../../services/documentsService';
 import { departmentsService } from '../../services/departmentsService';
