@@ -128,10 +128,15 @@ const DocumentUploader: React.FC<DocumentUploaderProps> = ({ onDataProcessed, on
     const validTypes = [
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
       'application/msword', // .doc
-      'application/vnd.oasis.opendocument.text' // .odt
+      'application/vnd.oasis.opendocument.text', // .odt
+      'application/octet-stream' // Fallback para algunos archivos Word
     ];
 
-    if (!validTypes.includes(file.type)) {
+    // Validar por extensión si el tipo MIME no es reconocido
+    const fileName = file.name.toLowerCase();
+    const hasValidExtension = fileName.endsWith('.doc') || fileName.endsWith('.docx') || fileName.endsWith('.odt');
+    
+    if (!validTypes.includes(file.type) && !hasValidExtension) {
       showNotification(
         'error',
         'Tipo de archivo no válido',

@@ -48,8 +48,30 @@ export const documentProcessorService = {
     try {
       // Convertir Word a HTML usando mammoth
       const arrayBuffer = await file.arrayBuffer();
-      const result = await mammoth.extractRawText({ arrayBuffer });
+      
+      let result;
+      try {
+        result = await mammoth.extractRawText({ arrayBuffer });
+      } catch (mammothError) {
+        console.error('Mammoth processing error:', mammothError);
+        // Intentar con convertToHtml como fallback
+        try {
+          const htmlResult = await mammoth.convertToHtml({ arrayBuffer });
+          // Extraer texto del HTML
+          const tempDiv = document.createElement('div');
+          tempDiv.innerHTML = htmlResult.value;
+          result = { value: tempDiv.textContent || tempDiv.innerText || '' };
+        } catch (htmlError) {
+          console.error('HTML conversion error:', htmlError);
+          throw new Error('No se pudo leer el contenido del documento. Verifica que el archivo no esté corrupto.');
+        }
+      }
+      
       const text = result.value;
+      
+      if (!text || text.trim().length === 0) {
+        throw new Error('El documento parece estar vacío o no contiene texto legible.');
+      }
 
       // Procesar el texto extraído
       const processedData = this.parseDocumentText(text);
@@ -57,7 +79,10 @@ export const documentProcessorService = {
       return processedData;
     } catch (error) {
       console.error('Error processing Word document:', error);
-      throw new Error('No se pudo procesar el documento. Asegúrate de que sea un archivo Word válido.');
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error('No se pudo procesar el documento. Asegúrate de que sea un archivo Word válido y no esté protegido con contraseña.');
     }
   },
 
