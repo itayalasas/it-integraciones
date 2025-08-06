@@ -119,6 +119,8 @@ interface FormData {
   dataFlow: string;
   securityRequirements: string;
   performanceRequirements: string;
+  serviceUrl: string;
+  credentials: string;
   
   // Requerimientos no funcionales
   availability: string;
@@ -878,6 +880,44 @@ const NewRequest: React.FC = () => {
                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Especifica los requerimientos de rendimiento..."
                   />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    URL del Servicio (Opcional)
+                  </label>
+                  <input
+                    type="url"
+                    {...register('serviceUrl')}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="https://api.ejemplo.com/endpoint"
+                  />
+                  <p className="mt-1 text-sm text-gray-500">
+                    URL del servicio web o API que se va a consumir
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Credenciales (Opcional)
+                  </label>
+                  <textarea
+                    {...register('credentials')}
+                    rows={3}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Usuario/contraseña, token, API key, etc."
+                  />
+                  <div className="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                    <div className="flex items-start space-x-2">
+                      <AlertCircle className="h-4 w-4 text-amber-600 mt-0.5" />
+                      <div>
+                        <p className="text-sm font-medium text-amber-800">Información Sensible</p>
+                        <p className="text-sm text-amber-700">
+                          Esta información será encriptada automáticamente y solo será visible en el detalle de la solicitud.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
             </div>
 

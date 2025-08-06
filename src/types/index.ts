@@ -46,6 +46,8 @@ export interface IntegrationRequest {
     dataFlow: string;
     securityRequirements: string;
     performanceRequirements: string;
+    serviceUrl: string;
+    credentials: string;
   };
   
   // Requerimientos no funcionales
