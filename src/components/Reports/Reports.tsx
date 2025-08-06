@@ -19,12 +19,14 @@ import { IntegrationRequest } from '../../types';
 import { requestsService } from '../../services/requestsService';
 import { reportsService } from '../../services/reportsService';
 import { systemsService } from '../../services/systemsService';
+import { pdfReportService } from '../../services/pdfReportService';
 
 const Reports: React.FC = () => {
   const [requests, setRequests] = useState<IntegrationRequest[]>([]);
   const [systems, setSystems] = useState<any>({});
   const [loading, setLoading] = useState(true);
   const [exporting, setExporting] = useState(false);
+  const [exportingPdf, setExportingPdf] = useState(false);
   const [dateRange, setDateRange] = useState({
     startDate: '',
     endDate: ''
@@ -79,6 +81,19 @@ const Reports: React.FC = () => {
       alert('Error al exportar a Excel');
     } finally {
       setExporting(false);
+    }
+  };
+
+  const handleExportToPdf = async () => {
+    setExportingPdf(true);
+    try {
+      const filteredRequests = getFilteredRequests();
+      await pdfReportService.generateExecutiveReport(filteredRequests, systems);
+    } catch (error) {
+      console.error('Error exporting to PDF:', error);
+      alert('Error al exportar a PDF');
+    } finally {
+      setExportingPdf(false);
     }
   };
 
@@ -198,6 +213,14 @@ const Reports: React.FC = () => {
         >
           <FileSpreadsheet className="h-4 w-4" />
           <span>{exporting ? 'Exportando...' : 'Exportar a Excel'}</span>
+        </button>
+        <button
+          onClick={handleExportToPdf}
+          disabled={exportingPdf || filteredRequests.length === 0}
+          className="flex items-center space-x-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
+        >
+          <Download className="h-4 w-4" />
+          <span>{exportingPdf ? 'Generando PDF...' : 'Reporte Ejecutivo PDF'}</span>
         </button>
       </div>
 
