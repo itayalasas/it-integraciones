@@ -5,21 +5,20 @@ import { useAuth } from '../../contexts/AuthContext';
 import { systemsService } from '../../services/systemsService';
 import { requestsService } from '../../services/requestsService';
 import { 
-  Save, 
-  Send, 
-  Plus, 
-  Trash2, 
+  Plus,
+  Trash2,
+  ArrowLeft,
+  ArrowRight,
   CheckCircle,
   AlertCircle,
+  Upload,
   X,
   FileText,
-  Code,
   Settings,
   Building,
   Save,
   Edit,
   Clock
-  Upload,
   Image,
   ArrowRight,
   Database,
