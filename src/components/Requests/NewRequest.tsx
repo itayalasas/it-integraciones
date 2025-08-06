@@ -16,6 +16,7 @@ import {
   FileText,
   Building,
   Save,
+  Paperclip,
   Edit,
   Clock,
   Image,
