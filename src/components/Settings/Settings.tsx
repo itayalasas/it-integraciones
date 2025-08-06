@@ -492,9 +492,9 @@ const Settings: React.FC = () => {
         
         <div className="mt-4 p-3 bg-gray-50 rounded-lg">
           <p className="text-sm text-gray-700">
-            <strong>💡 Uso recomendado:</strong> Las plantillas se descargan en formato .doc para máxima compatibilidad. 
-            Después de completarlas, <strong>debes guardarlas como .docx</strong> (Archivo → Guardar como → Formato: .docx) 
-            antes de subirlas al sistema. Solo se aceptan archivos .docx para el procesamiento automático.
+            <strong>💡 Uso recomendado:</strong> Las plantillas se descargan en formato .docx nativo. 
+            Después de completarlas, <strong>guárdalas manteniendo el formato .docx</strong> para que el sistema 
+            pueda procesarlas automáticamente. Solo se aceptan archivos .docx para el procesamiento.
           </p>
         </div>
       </div>
