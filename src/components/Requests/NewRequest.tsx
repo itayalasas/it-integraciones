@@ -19,6 +19,7 @@ import {
   Edit,
   Clock,
   Image,
+  Code,
   Database,
   Server,
   Paperclip,
