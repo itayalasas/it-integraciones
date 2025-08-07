@@ -878,7 +878,7 @@ const Settings: React.FC = () => {
                         <button
                           onClick={() => handleDelete(system.id)}
                           className="p-1 text-gray-400 hover:text-red-600"
-                          title="Eliminar sistema permanentemente"
+                          title="Eliminar sistema (permanente)"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
