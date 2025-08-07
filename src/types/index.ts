@@ -19,6 +19,7 @@ export interface IntegrationRequest {
   department: string;
   status: 'draft' | 'submitted' | 'in_review' | 'approved' | 'rejected' | 'in_development' | 'completed';
   priority: 'low' | 'medium' | 'high' | 'urgent';
+  workFront: 'INSIS' | 'Mulesoft' | 'BAU' | 'IA' | 'CCM' | 'Nuevas iniciativas';
   createdAt: Date;
   updatedAt: Date;
   dueDate?: Date;
