@@ -153,9 +153,48 @@ export const systemsService = {
     }
   },
 
+  // Limpiar sistemas duplicados
+  async cleanupDuplicateSystems(): Promise<void> {
+    try {
+      const allSystems = await this.getSystems();
+      const systemNames = new Map<string, System[]>();
+      
+      // Agrupar sistemas por nombre
+      allSystems.forEach(system => {
+        const name = system.name.toLowerCase();
+        if (!systemNames.has(name)) {
+          systemNames.set(name, []);
+        }
+        systemNames.get(name)!.push(system);
+      });
+
+      // Eliminar duplicados (mantener solo el más reciente)
+      for (const [name, systems] of systemNames) {
+        if (systems.length > 1) {
+          console.log(`Encontrados ${systems.length} sistemas duplicados para "${name}"`);
+          
+          // Ordenar por fecha de creación (más reciente primero)
+          systems.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+          
+          // Mantener el primero (más reciente) y eliminar el resto
+          for (let i = 1; i < systems.length; i++) {
+            console.log(`Eliminando sistema duplicado: ${systems[i].id}`);
+            await this.deleteSystem(systems[i].id);
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error cleaning up duplicate systems:', error);
+      throw error;
+    }
+  },
+
   // Inicializar sistemas por defecto
   async initializeDefaultSystems(): Promise<void> {
     try {
+      // Primero limpiar duplicados existentes
+      await this.cleanupDuplicateSystems();
+      
       const existingSystems = await this.getSystems();
       if (existingSystems.length === 0) {
         const defaultSystems: Omit<System, 'id'>[] = [
