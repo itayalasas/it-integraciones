@@ -201,6 +201,7 @@ const NewRequest: React.FC = () => {
       sourceSystem: findSystemByName(data.sourceSystem) || prev.sourceSystem,
       targetSystem: findSystemByName(data.targetSystem) || prev.targetSystem,
       intermediarySystem: findSystemByName(data.intermediarySystem || '') || prev.intermediarySystem,
+      workFront: prev.workFront, // Mantener el valor actual ya que no viene del documento
       functionalRequirements: {
         businessGoals: data.functionalRequirements.businessGoals || prev.functionalRequirements.businessGoals,
         functionalRequirements: data.functionalRequirements.functionalRequirements || prev.functionalRequirements.functionalRequirements,
@@ -307,7 +308,6 @@ const NewRequest: React.FC = () => {
         department: currentUser.department,
         status: isDraft ? 'draft' : 'submitted',
         priority: formData.priority,
-        workFront: formData.workFront,
         dueDate: formData.dueDate ? new Date(formData.dueDate) : undefined,
         systemToIntegrate: formData.systemToIntegrate,
         sourceSystem: formData.sourceSystem,
