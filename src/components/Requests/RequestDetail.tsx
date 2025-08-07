@@ -589,6 +589,14 @@ const RequestDetail: React.FC = () => {
                   <p className="font-medium text-gray-900">{request.department}</p>
                 </div>
               </div>
+              <div>
+                <p className="text-sm text-gray-500">Prioridad</p>
+                <p className="font-medium text-gray-900">{getPriorityText(request.priority)}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Frente de Trabajo</p>
+                <p className="font-medium text-gray-900">{request.workFront}</p>
+              </div>
             </div>
           </div>
 

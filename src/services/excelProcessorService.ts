@@ -345,6 +345,18 @@ export const excelProcessorService = {
     return 'medium';
   },
 
+  // Parsear frente de trabajo
+  parseWorkFront(workFrontStr: string): 'INSIS' | 'Mulesoft' | 'BAU' | 'IA' | 'CCM' | 'Nuevas iniciativas' {
+    const workFront = workFrontStr.toLowerCase().trim();
+    if (workFront.includes('insis')) return 'INSIS';
+    if (workFront.includes('mulesoft')) return 'Mulesoft';
+    if (workFront.includes('bau')) return 'BAU';
+    if (workFront.includes('ia') || workFront.includes('inteligencia artificial')) return 'IA';
+    if (workFront.includes('ccm')) return 'CCM';
+    if (workFront.includes('nuevas') || workFront.includes('iniciativas')) return 'Nuevas iniciativas';
+    return 'INSIS'; // Default
+  },
+
   // Validar datos procesados
   validateProcessedData(data: ProcessedRequestData): { isValid: boolean; errors: string[] } {
     const errors: string[] = [];

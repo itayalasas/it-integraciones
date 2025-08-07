@@ -192,6 +192,7 @@ export const pdfReportService = {
                       <td style="padding: 12px 8px;">
                         <div style="font-weight: 600; color: #1e293b; margin-bottom: 2px;">${request.requesterName}</div>
                         <div style="font-size: 10px; color: #64748b;">${request.department}</div>
+                        <div style="font-size: 10px; color: #64748b; margin-top: 2px;">Frente: ${request.workFront}</div>
                       </td>
                     </tr>
                   `;

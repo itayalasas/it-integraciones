@@ -547,6 +547,11 @@ const Reports: React.FC = () => {
                       <div className="text-sm text-gray-500">{request.department}</div>
                     </div>
                   </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      {request.workFront}
+                    </span>
+                  </td>
                 </tr>
               ))}
             </tbody>

@@ -352,6 +352,8 @@ const RequestsList: React.FC = () => {
                       <div className="flex items-center space-x-4 text-sm text-gray-500">
                         <span>Sistema: {getSystemName(request.systemToIntegrate)}</span>
                         <span>•</span>
+                        <span>Frente: {request.workFront}</span>
+                        <span>•</span>
                         <span>Creada: {request.createdAt.toLocaleDateString()}</span>
                         {request.dueDate && (
                           <>

@@ -376,6 +376,13 @@ const ApprovalsList: React.FC = () => {
                         <p className="text-sm font-medium text-gray-900">{request.department}</p>
                       </div>
                       <div>
+                        <p className="text-xs text-gray-500">Frente de Trabajo</p>
+                        <p className="text-sm font-medium text-gray-900">{request.workFront}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                      <div>
                         <p className="text-xs text-gray-500">Sistema</p>
                         <p className="text-sm font-medium text-gray-900">{getSystemName(request.systemToIntegrate)}</p>
                       </div>

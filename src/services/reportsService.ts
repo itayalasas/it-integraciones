@@ -23,6 +23,7 @@ export const reportsService = {
         'Prioridad': this.getPriorityText(request.priority),
         'Solicitante': request.requesterName,
         'Departamento': request.department,
+        'Frente de Trabajo': request.workFront,
         'Sprint Asignado': this.getSprintName(request),
         'Sprint Inicio': this.getSprintStartDate(request),
         'Sprint Fin': this.getSprintEndDate(request),
