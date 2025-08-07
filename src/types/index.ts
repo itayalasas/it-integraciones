@@ -18,6 +18,8 @@ export interface IntegrationRequest {
   requesterName: string;
   department: string;
   status: 'draft' | 'submitted' | 'in_review' | 'approved' | 'rejected' | 'in_development' | 'completed';
+  // Nuevos estados para mejor tracking
+  detailedStatus?: 'delivered' | 'blocked' | 'in_process' | 'analysis' | 'no_status';
   priority: 'low' | 'medium' | 'high' | 'urgent';
   workFront: 'INSIS' | 'Mulesoft' | 'BAU' | 'IA' | 'CCM' | 'Nuevas iniciativas';
   createdAt: Date;

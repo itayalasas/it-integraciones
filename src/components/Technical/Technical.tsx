@@ -133,7 +133,7 @@ const Technical: React.FC = () => {
       const allRequests = await requestsService.getRequests();
       // Filtrar solicitudes que están en desarrollo o completadas
       const technicalRequests = allRequests.filter(request => 
-        ['approved', 'in_development', 'completed'].includes(request.status)
+        ['approved', 'in_development', 'completed', 'blocked', 'delivered'].includes(request.status)
       );
       setRequests(technicalRequests);
     } catch (error) {
@@ -220,6 +220,8 @@ const Technical: React.FC = () => {
       case 'approved': return 'bg-green-100 text-green-800';
       case 'in_development': return 'bg-purple-100 text-purple-800';
       case 'completed': return 'bg-emerald-100 text-emerald-800';
+      case 'blocked': return 'bg-red-100 text-red-800';
+      case 'delivered': return 'bg-blue-100 text-blue-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
@@ -228,7 +230,9 @@ const Technical: React.FC = () => {
     const statusMap: { [key: string]: string } = {
       'approved': 'Aprobada',
       'in_development': 'En Desarrollo',
-      'completed': 'Completada'
+      'completed': 'Completada',
+      'blocked': 'Bloqueada',
+      'delivered': 'Entregada'
     };
     return statusMap[status] || status;
   };
@@ -258,6 +262,8 @@ const Technical: React.FC = () => {
       case 'approved': return CheckCircle;
       case 'in_development': return Activity;
       case 'completed': return CheckCircle;
+      case 'blocked': return AlertCircle;
+      case 'delivered': return CheckCircle;
       default: return Clock;
     }
   };
@@ -289,6 +295,8 @@ const Technical: React.FC = () => {
       approved: requests.filter(r => r.status === 'approved').length,
       inDevelopment: requests.filter(r => r.status === 'in_development').length,
       completed: requests.filter(r => r.status === 'completed').length,
+      blocked: requests.filter(r => r.status === 'blocked').length,
+      delivered: requests.filter(r => r.status === 'delivered').length,
       withSprint: requests.filter(r => r.sprintInfo).length,
       withoutSprint: requests.filter(r => r.status === 'approved' && !r.sprintInfo).length
     };
@@ -337,7 +345,7 @@ const Technical: React.FC = () => {
       </div>
 
       {/* Estadísticas */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
         <div className="bg-white p-6 rounded-xl shadow-sm border">
           <div className="flex items-center justify-between">
             <div>
@@ -365,6 +373,26 @@ const Technical: React.FC = () => {
               <p className="text-2xl font-bold text-emerald-600">{stats.completed}</p>
             </div>
             <CheckCircle className="h-8 w-8 text-emerald-600" />
+          </div>
+        </div>
+
+        <div className="bg-white p-6 rounded-xl shadow-sm border">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Bloqueadas</p>
+              <p className="text-2xl font-bold text-red-600">{stats.blocked}</p>
+            </div>
+            <AlertCircle className="h-8 w-8 text-red-600" />
+          </div>
+        </div>
+
+        <div className="bg-white p-6 rounded-xl shadow-sm border">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Entregadas</p>
+              <p className="text-2xl font-bold text-blue-600">{stats.delivered}</p>
+            </div>
+            <CheckCircle className="h-8 w-8 text-blue-600" />
           </div>
         </div>
 
@@ -575,6 +603,8 @@ const Technical: React.FC = () => {
                   <option value="approved">Aprobada (Lista para desarrollo)</option>
                   <option value="in_development">En Desarrollo</option>
                   <option value="completed">Completada</option>
+                  <option value="blocked">Bloqueada</option>
+                  <option value="delivered">Entregada</option>
                 </select>
               </div>
               

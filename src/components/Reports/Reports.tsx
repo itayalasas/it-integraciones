@@ -27,6 +27,7 @@ const Reports: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [exporting, setExporting] = useState(false);
   const [exportingPdf, setExportingPdf] = useState(false);
+  const [exportingWorkFront, setExportingWorkFront] = useState(false);
   const [dateRange, setDateRange] = useState({
     startDate: '',
     endDate: ''
@@ -64,6 +65,19 @@ const Reports: React.FC = () => {
       setSystems(systemsMap);
     } catch (error) {
       console.error('Error loading systems:', error);
+    }
+  };
+
+  const handleExportWorkFrontReport = async () => {
+    setExportingWorkFront(true);
+    try {
+      const { workFrontReportService } = await import('../../services/workFrontReportService');
+      await workFrontReportService.exportWorkFrontReport(requests);
+    } catch (error) {
+      console.error('Error exporting work front report:', error);
+      alert('Error al exportar reporte por frentes');
+    } finally {
+      setExportingWorkFront(false);
     }
   };
 
@@ -215,6 +229,14 @@ const Reports: React.FC = () => {
           <span>{exporting ? 'Exportando...' : 'Exportar a Excel'}</span>
         </button>
         <button
+          onClick={handleExportWorkFrontReport}
+          disabled={exportingWorkFront || filteredRequests.length === 0}
+          className="flex items-center space-x-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50"
+        >
+          <BarChart3 className="h-4 w-4" />
+          <span>{exportingWorkFront ? 'Generando...' : 'Reporte por Frentes'}</span>
+        </button>
+        <button
           onClick={handleExportToPdf}
           disabled={exportingPdf || filteredRequests.length === 0}
           className="flex items-center space-x-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
@@ -273,6 +295,8 @@ const Reports: React.FC = () => {
               <option value="rejected">Rechazada</option>
               <option value="in_development">En Desarrollo</option>
               <option value="completed">Completada</option>
+              <option value="blocked">Bloqueada</option>
+              <option value="delivered">Entregada</option>
             </select>
           </div>
 

@@ -75,6 +75,8 @@ export const reportsService = {
         ['Rechazadas:', requests.filter(r => r.status === 'rejected').length],
         ['En Desarrollo:', requests.filter(r => r.status === 'in_development').length],
         ['Completadas:', requests.filter(r => r.status === 'completed').length],
+        ['Bloqueadas:', requests.filter(r => r.status === 'blocked').length],
+        ['Entregadas:', requests.filter(r => r.status === 'delivered').length],
         [''],
         ['GESTIÓN DE SPRINTS:'],
         ['Con Sprint asignado:', requests.filter(r => r.sprintInfo).length],
@@ -217,7 +219,9 @@ export const reportsService = {
       'approved': 'Aprobada',
       'rejected': 'Rechazada',
       'in_development': 'En Desarrollo',
-      'completed': 'Completada'
+      'completed': 'Completada',
+      'blocked': 'Bloqueada',
+      'delivered': 'Entregada'
     };
     return statusMap[status] || status;
   },
